@@ -73,14 +73,13 @@ As can be seen, three 'events' are shown in the above section of the TB:
 3. Three transfer requests are given at the same clock edge. Master_0 and master_1 initiate a 'write' transfer while master_2 initiates a read transfer. 
 
 **Detailed view**
-1.	Continious writing of random data to the FIFO memory
-	**Continious writing operation (waveform):**
-		![Continious writing operation](./docs/synchronous_write.JPG) 
+1.	First event
+	![APB_sim_1](./docs/APB_sim_1.jpg) 
+As can be seen, the M1 transfer is carried first followed by the M0 transfer to S1 without any additional request carried by the losing master in the arbitration (M0).
 
-### Possible Applications
+I recomend running the TB and viewing all APB-related signals (psel,penable,etc.) as well as the slaves' memory arrays to get a better understanding of the flow. 
 
-Implementation of the synchronous FIFO memory in a complete UART module can be found in the [following repository](https://github.com/tom-urkin/UART)
-
+2. Second event
 ## Support
 
 I will be happy to answer any questions.  
