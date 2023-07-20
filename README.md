@@ -15,17 +15,27 @@ The source files for the APB side of the architecture:
 
 The source files for the AHB side of the architecture:
 
--XXX
--XXX
+- XXX
+- XXX
 
 The source files for the AHB-APB bridge:
 
--XXX
--XXX
+- XXX
+- XXX
 
+It is recomended to go over the various modules in the following order:
+1. APB-side
+2. AHB-side
+3. AHB-APB bridge
+4. Complete architecture
+The following sections are written in this order.
 
+## APB side 
+A block diagram of the complete architecture is as follows:
+	![APB_arch](./docs/APB_arch.JPG) 
+A block diagram of the APB side interconnect fabric is as follows:
+	![IF_APB](./docs/IF_APB.JPG) 
 
-To simulate the synchronous/asynchronous simply change the 'TYPE' parameter in the [FIFO_TB](./FIFO_TB.sv) file.
 ## Testbench
 
 The testbench comprises three tests for a 32 8-bit word FIFO memory: continious writing (left), continious reading (middle) random read/write operation (right):
