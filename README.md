@@ -72,14 +72,17 @@ As can be seen, three 'events' are shown in the above section of the TB:
 2. One transfer request by master_2. Mater_2 initiates a 'read' transfer.
 3. Three transfer requests are given at the same clock edge. Master_0 and master_1 initiate a 'write' transfer while master_2 initiates a read transfer. 
 
-**Detailed view**
+I recomend running the TB and viewing all APB-related signals (psel,penable,etc.) as well as the slaves' memory arrays to get a better understanding of the flow. 
+
+**Detailed view on the firt two events**
 1.	First event
 	![APB_sim_1](./docs/APB_sim_1.jpg) 
 As can be seen, the M1 transfer is carried first followed by the M0 transfer to S1 without any additional request carried by the losing master in the arbitration (M0).
-
-I recomend running the TB and viewing all APB-related signals (psel,penable,etc.) as well as the slaves' memory arrays to get a better understanding of the flow. 
-
+=
 2. Second event
+	![APB_sim_2](./docs/APB_sim_2.jpg) 
+
+
 ## Support
 
 I will be happy to answer any questions.  
