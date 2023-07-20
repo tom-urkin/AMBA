@@ -32,9 +32,9 @@ The following sections are written in this order.
 
 ## APB side 
 A block diagram of the complete architecture is as follows:
-	![APB_arch](./docs/APB_arch.JPG) 
+	![APB_arch](./docs/APB_arch.jpg) 
 A block diagram of the APB side interconnect fabric is as follows:
-	![IF_APB](./docs/IF_APB.JPG) 
+	![IF_APB](./docs/IF_APB.jpg) 
 
 ## Testbench
 
