@@ -38,12 +38,15 @@ This side of the architecture comprises:
 	-APB masters : number of masters on the bus can be configured in the source code
 	-APB slaves : number of slave on the bus can be configured in the source codes
 	
-
 A block diagram of the complete architecture is as follows:
 	![APB_arch](./docs/APB_arch.jpg) 
 
 A block diagram of the APB side interconnect fabric is as follows:
 	![IF_APB](./docs/IF_APB.jpg) 
+
+The buses comprise the follwing signals:
+	![APB_buses](./docs/APB_buses.jpg) 
+
 
 ## Testbench
 
