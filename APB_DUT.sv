@@ -218,7 +218,7 @@ APB_Slave #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .REG_NUM(REG_NUM),
                 );
 
 //Interconnect fabric instantiation
-interconnect_fabric #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .MASTER_COUNT(MASTER_COUNT), .SLAVE_COUNT(SLAVE_COUNT)) f0(
+apb_interconnect_fabric #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .MASTER_COUNT(MASTER_COUNT), .SLAVE_COUNT(SLAVE_COUNT)) f0(
                 .i_prstn(i_prstn),                                                           
                 .i_pclk(i_pclk),                                                             
  

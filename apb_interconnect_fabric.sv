@@ -92,7 +92,7 @@ endmodule
 
 //------------------------------------------------------------------------------------//
 //APB interconnect fabric (IF)
-module interconnect_fabric(i_prstn,i_pclk,
+module apb_interconnect_fabric(i_prstn,i_pclk,
 i_paddr_m0,i_pwrite_m0,i_psel_m0,i_penable_m0,i_pwdata_m0,
 i_paddr_m1,i_pwrite_m1,i_psel_m1,i_penable_m1,i_pwdata_m1,
 i_paddr_m2,i_pwrite_m2,i_psel_m2,i_penable_m2,i_pwdata_m2,
