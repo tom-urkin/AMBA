@@ -1,0 +1,121 @@
+//APB 3 Master
+
+module APB_Master(i_prstn,i_pclk,i_command,i_start,i_data_in,i_addr_in,i_prdata,i_pready,i_pslverr,o_paddr,o_pwrite,o_psel,o_penable,o_pwdata,o_data_out,o_transfer_status,o_valid,o_ready);
+
+//Parameters
+parameter DATA_WIDTH = 32;                                     //Data bus width
+parameter ADDR_WIDTH = 32;                                     //Address bus width
+parameter SLAVE_COUNT=3;
+
+parameter ADDR_MSB_len = 25;                                   //Part of the address bus used to select a slave unit
+parameter [ADDR_MSB_len-1:0] ADDR_SLAVE_0 = 0;                 //Address of slave_0
+parameter [ADDR_MSB_len-1:0] ADDR_SLAVE_1= 1;                  //Address of slave_1
+parameter [ADDR_MSB_len-1:0] ADDR_SLAVE_2= 2;                  //Address of slave_2
+
+//STATE Parameters
+localparam [1:0] IDLE = 2'b00;                                 //IDLE state
+localparam [1:0] SETUP = 2'b01;                                //SETUP state
+localparam [1:0] ACCESS = 2'b10;                               //ACCESS state
+
+//Inputs
+input logic i_prstn;                                           //Active high logic 
+input logic i_pclk;                                            //System's clock
+input logic i_command;                                         //Dictates transfer direction. '1' for Master-->Slave (write) and '0' for Slave-->Master (read)
+input logic i_start;                                           //Read/Write transer is initiated if the 'start' signal is logic high upon positive edge of CLK
+input logic [DATA_WIDTH-1:0] i_data_in;                        //Data to be written to a Slave
+input logic [ADDR_WIDTH-1:0] i_addr_in;                        //Slave address
+input logic [DATA_WIDTH-1:0] i_prdata;                         //Driven by the peripheral data bus
+input logic i_pready;                                          //Ready signal. A slave may use this signal to extend an APB transfer
+input logic i_pslverr;                                         //pslverr signal indicates a transfer failure
+
+//Outputs
+output logic [ADDR_WIDTH-1:0] o_paddr;                         //Drive the peripheral address bus
+output logic o_pwrite;                                         //Drives the peripheral transfer direction
+output logic [SLAVE_COUNT-1:0] o_psel;                         //Drives the peripheral slave select
+output logic o_penable;                                        //Drives the peripheral enable
+output logic [DATA_WIDTH-1:0] o_pwdata;                        //Drives the peripheral write data bus
+output logic [DATA_WIDTH-1:0] o_data_out;                      //Data recieved from the salve after completion of a 'read' command
+output logic o_transfer_status;                                //Communication status. '1' if transfer failed, '0' otherwise
+output logic o_valid;                                          //Indicates the validity of the output data. logic high for 'valid' data
+output logic o_ready;                                          //'ready' signal. New read/write commands cannot be issued if the bus is busy.
+
+//Internal signals
+logic [1:0] state;
+logic [1:0] next_state;
+
+//HDL code
+//Updating current state
+always @(posedge i_pclk or negedge i_prstn)
+  if (!i_prstn)
+    state<=IDLE;
+  else
+    state<=next_state; 
+
+//Calculating next state
+always @(*)
+  case(state)
+    IDLE: next_state = (i_start) ? SETUP : IDLE;
+	SETUP: next_state = ACCESS;
+	ACCESS: next_state = (i_pready) ? ((i_start) ? SETUP : IDLE) : ACCESS;
+  endcase
+
+//Generating and sampling APB related signals
+always @(posedge i_pclk or negedge i_prstn)
+  if (!i_prstn) begin
+    o_paddr<='0; 
+    o_psel<='0;	  
+    o_pwrite<=1'b0;
+    o_penable<=1'b0;
+    o_pwdata<='0;
+  end
+  else begin
+    case (state)
+	
+	  IDLE: begin
+		if (i_start) begin
+	      o_paddr<=i_addr_in;                                     //Sample the slave address		
+		  o_pwrite<=i_command;                                    //Sample the command, i.e. read/write
+		  
+		  case (i_addr_in[(ADDR_WIDTH-1)-:ADDR_MSB_len])
+		    ADDR_SLAVE_0: o_psel<=3'b001;
+		    ADDR_SLAVE_1: o_psel<=3'b010;
+		    ADDR_SLAVE_2: o_psel<=3'b100;			
+		  endcase
+         
+		 o_pwdata<=(i_command) ? i_data_in : o_pwdata;                   //Update the write bus for a write operation
+		  o_penable<=1'b0;                                                //PENABLE signal rises to logic high during the ENABLE phase of the transmission 	
+		end
+		else begin
+		  o_psel<='0;                                                   
+		  o_penable<=1'b0;  
+		end
+	  end
+	  
+	  SETUP: begin
+		o_penable<=1'b1;                                                  //PENABLE signal rises to logic high during the ENABLE phase of the transmission 
+	  end
+	  
+	  ACCESS: begin
+		o_transfer_status<=(i_pready) ? i_pslverr : o_transfer_status;    //Updating the transfer status according to the pslverr signal generated by the slave
+		if (i_pready) begin                                               //The 'penable' signal goes low when 'pready' is logic high 
+		  o_penable<=1'b0;
+		  if (!i_start)                                                   //The pselx goes low unless the transfer is immidiately followed by another to the same peripheral
+		    o_psel<='0;
+		  if (!i_command)                                                 //Update the output date at the end of a read command
+		    o_data_out<=i_prdata;
+		end
+	  end
+	  
+	endcase
+  end
+ 
+//Generate 'o_valid' signal - rises to logic high for one clock cycle after a 'read' transfer
+always @(posedge i_pclk or negedge i_prstn)
+  if (!i_prstn)
+    o_valid<=1'b0;
+  else if (|o_psel&o_penable&i_pready&~o_pwrite)                          //'valid' signal is generated for read commands only
+    o_valid<=1'b1;
+  else o_valid<=1'b0;
+ 
+ assign o_ready = (state==IDLE) ? 1'b1 : 1'b0;                           //'ready' signal indicates the bus is free to initiate a new trasfer           
+endmodule
