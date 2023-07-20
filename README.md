@@ -72,18 +72,11 @@ As can be seen, three 'events' are shown in the above section of the TB:
 2. One transfer request by master_2. Mater_2 initiates a 'read' transfer.
 3. Three transfer requests are given at the same clock edge. Master_0 and master_1 initiate a 'write' transfer while master_2 initiates a read transfer. 
 
+
 1.	Continious writing of random data to the FIFO memory
 
 	**Continious writing operation (waveform):**
 		![Continious writing operation](./docs/synchronous_write.JPG) 
-
-	As can be seen, the FIFO_full signal rises to logic high when 32 consecutive write operations are executed and the memory is full. 
-	Please note that the 'FIFO_full_tst_final' mimicks the 'FIFO_full' signal.
-
-	**Continious writing operation (terminal view):**
-		![QuestaSim wave window](./docs/synchronous_write_terminal.JPG)  
-	
-	As can be seen in the terminal view of the first iterations, the mimicked FIFO memory matches the actual FIFO memory ('verification queue')	
 
 ### Possible Applications
 
