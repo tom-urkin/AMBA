@@ -57,7 +57,7 @@ The buses comprise the follwing signals:
 
 ### APB side testbench
 
-The testbench comprises three tests for a 32 8-bit word FIFO memory: continious writing (left), continious reading (middle) random read/write operation (right):
+The APB side TB verifies the operation of the APB_DUT module which comprises instantiations of 3 APB masters and 3 APB slaves.
 
 **Synchronous FIFO memory TB:**
 	![Synchronous FIFO memory TB](./docs/synchronous_read_write_mix.JPG) 
