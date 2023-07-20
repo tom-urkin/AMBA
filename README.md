@@ -57,11 +57,9 @@ The buses comprise the follwing signals:
 
 ### APB side testbench
 
-The APB side TB verifies the operation of the APB_DUT module which comprises instantiations of 3 APB masters and 3 APB slaves.
-
-**Synchronous FIFO memory TB:**
-	![Synchronous FIFO memory TB](./docs/synchronous_read_write_mix.JPG) 
-
+The APB side TB verifies the operation of the APB_DUT module which comprises instantiations of 3 APB masters and 3 APB slaves. The requesting masters, targeted slaves, memory addresses and data to be written are randomized and fed into the APB_DUT to initiate a single or multiple transfers. 
+When a 'write' transfer is initiated, a mimiced memory is updated in the TB file with repect to the selected slave. 
+When a 'read' transfer is initiated, the read data in the granted master is compared with the relevant mimic memory and address by calling the 'compare' task.
 
 1.	Continious writing of random data to the FIFO memory
 
