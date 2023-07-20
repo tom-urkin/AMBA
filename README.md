@@ -64,7 +64,6 @@ When a 'write' transfer is initiated, a mimiced memory is updated in the TB file
 When a 'read' transfer is initiated, the read data in the granted master is compared with the relevant mimic memory and address by calling the 'compare' task.
 
 Let's go over some examplry bus operation:
-
 	![APB_sim](./docs/APB_sim.jpg) 
 
 
