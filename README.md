@@ -78,7 +78,7 @@ I recomend running the TB and viewing all APB-related signals (psel,penable,etc.
 1.	First event
 	![APB_sim_1](./docs/APB_sim_1.jpg) 
 As can be seen, the M1 transfer is carried first followed by the M0 transfer to S1 without any additional request carried by the losing master in the arbitration (M0).
-=
+
 2. Second event
 	![APB_sim_2](./docs/APB_sim_2.jpg) 
 
