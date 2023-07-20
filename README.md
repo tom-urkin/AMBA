@@ -32,7 +32,7 @@ The following sections are written in this order.
 
 Note: Please note that all transfers are initiated by dedicated tasks in the TB file. This is since the master and slave modules of the APB/AHB sides comprise the necessary logic to carry the AHB/APB protocol and perform read/write operations to a memory block within the slave modules.
 
-### APB side 
+## APB side 
 Traditionally, APB has a single master which is aht AHB-APB bridge. Here,I have realized a multi-master multi-slave APB architecture for educational purposes (and fun). Of course, the single-maseter multi-salve case can be realized wihtout any modifications to the source code.
 This side of the architecture comprises:
 	-APB masters : number of masters on the bus can be configured in the source code
@@ -55,7 +55,7 @@ The buses comprise the follwing signals:
 
 
 
-## APB side testbench
+### APB side testbench
 
 The testbench comprises three tests for a 32 8-bit word FIFO memory: continious writing (left), continious reading (middle) random read/write operation (right):
 
