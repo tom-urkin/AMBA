@@ -73,7 +73,7 @@ As can be seen, three 'events' are shown in the above section of the TB:
 3. Three transfer requests are given at the same clock edge. Master_0 and master_1 initiate a 'write' transfer while master_2 initiates a read transfer. 
 
 
-1.	Continious writing of random data to the FIFO memory
+	1.	Continious writing of random data to the FIFO memory
 
 	**Continious writing operation (waveform):**
 		![Continious writing operation](./docs/synchronous_write.JPG) 
