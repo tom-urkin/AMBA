@@ -30,9 +30,18 @@ It is recomended to go over the various modules in the following order:
 4. Complete architecture
 The following sections are written in this order.
 
+Note: Please note that all transfers are initiated by dedicated tasks in the TB file. This is since the master and slave modules of the APB/AHB sides comprise the necessary logic to carry the AHB/APB protocol and perform read/write operations to a memory block within the slave modules.
+
 ## APB side 
+Traditionally, APB has a single master which is aht AHB-APB bridge. Here,I have realized a multi-master multi-slave APB architecture for educational purposes (and fun). Of course, the single-maseter multi-salve case can be realized wihtout any modifications to the source code.
+This side of the architecture comprises:
+	-APB masters : number of masters on the bus can be configured in the source code
+	-APB slaves : number of slave on the bus can be configured in the source codes
+	
+
 A block diagram of the complete architecture is as follows:
 	![APB_arch](./docs/APB_arch.jpg) 
+
 A block diagram of the APB side interconnect fabric is as follows:
 	![IF_APB](./docs/IF_APB.jpg) 
 
