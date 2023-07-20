@@ -46,9 +46,9 @@ A block diagram of the APB side interconnect fabric is as follows:
 	![IF_APB](./docs/IF_APB.jpg) 
 
 The APB IF manages the access to the APB slaves. In case of multiple transfer requests on the same clock edge the following is carried:
-	1. Access to the slaves is dictated by a 'modified' Round-Robin arbiter ('rotate-peiority-rotate' scheme). In this realization, the priority is maintained for masters that do not initiate a transfer.
-	   For example: {M2 M1 M0}-->{M1 M2 M0} after M1 has initiated a transfer.
-	2. Requesting masters do not need to execute an additional request if they have not been granted access at first. The IF internally monitors all 'waiting' masters and automatically carries the transfer upon their turn.
+1. Access to the slaves is dictated by a 'modified' Round-Robin arbiter ('rotate-peiority-rotate' scheme). In this realization, the priority is maintained for masters that do not initiate a transfer.
+For example: {M2 M1 M0}-->{M1 M2 M0} after M1 has initiated a transfer.
+2. Requesting masters do not need to execute an additional request if they have not been granted access at first. The IF internally monitors all 'waiting' masters and automatically carries the transfer upon their turn.
 
 The buses comprise the follwing signals:
 	![APB_buses](./docs/APB_buses.jpg) 
