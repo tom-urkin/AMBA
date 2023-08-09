@@ -92,7 +92,7 @@ As can be seen, the M1 transfer is carried first followed by the M0 transfer to 
 Here,AHB-lite with single master and multiple slaves is realized in accordance with conventional AHB-lite architecture. 
 This side of the architecture comprises:
 
--**AHB master** : supports single transfer as well as **incrementing and wrapping** bursts of 4,8 and 16 beats. 
+-**AHB master** : supports single transfer as well as **incrementing and wrapping** bursts of 4,8 and 16 beats. Please note that target slave, target memory address, burst type, sent data, etc. are randomized in the TB.
 
 -**APB slaves** : number of slaves on the bus can be configured in the source codes
 
@@ -105,6 +105,15 @@ A block diagram of the complete architecture is as follows:
 The buses comprise the follwing signals:
 	![APB_buses](./docs/APB_buses.jpg) 
 	
+### AHB side testbench
+The AHB side TB verifies the operation of the AHB_DUT module which comprises instantiations of a single master and 3 AHB slaves. The requesting masters, targeted slaves, memory addresses and data to be written are randomized and fed into the APB_DUT to initiate a single or multiple transfers. 
+
+When a 'write' transfer is initiated, a mimiced memory is updated in the TB file with repect to the selected slave by calling the 'write to mimic' task.
+
+When a 'read' transfer is initiated, the read data in the granted master is compared with the relevant mimic memory and address by calling the 'compare' task.
+
+**Let's go over some examplry bus operation**:
+	![AHB_simulation](./docs/AHB_simulation.jpg) 
 
 ## Support
 
