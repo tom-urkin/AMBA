@@ -6,12 +6,12 @@
 
 The source files for the APB side of the architecture:
 
-- [APB_Master](./APB_Master.sv)
-- [APB_Slave](./APB_Slave.sv)
-- [APB Interconnect Fabric](./apb_interconnect_fabric.sv)
-- [APB_DUT](./APB_DUT.sv)
-- [APB_TB](./APB_TB.sv)
-- [wave](./wave_apb.sv)
+- [APB_Master](./APB/APB_Master.sv)
+- [APB_Slave](./APB/APB_Slave.sv)
+- [APB Interconnect Fabric](./APB/apb_interconnect_fabric.sv)
+- [APB_DUT](./APB/APB_DUT.sv)
+- [APB_TB](./APB/APB_TB.sv)
+- [wave](./APB/wave_apb.sv)
 
 The source files for the AHB side of the architecture:
 
