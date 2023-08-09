@@ -310,15 +310,15 @@ endtask
 
 //DUT instantiation
 AHB_DUT #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEMORY_DEPTH(MEMORY_DEPTH), .SLAVE_COUNT(SLAVE_COUNT), .WAIT_WRITE(WAIT_WRITE), .WAIT_READ(WAIT_READ)) d0(.i_hclk(clk),
-               .i_hreset(rstn),
-               .i_start_0(start_0),
-               .i_hburst(hburst_0),
-               .i_haddr_0(haddr_rand),
-               .i_hwrite_0(rw_0),
-               .i_hsize_0(hsize_0),
-               .i_hwdata_0(data_rand_0),
-               .o_hrdata_m0(data_out_m0),
-               .o_hready(hready)
+                                                                                                                                                                       .i_hreset(rstn),
+                                                                                                                                                                       .i_start_0(start_0),
+                                                                                                                                                                       .i_hburst(hburst_0),
+                                                                                                                                                                       .i_haddr_0(haddr_rand),
+                                                                                                                                                                       .i_hwrite_0(rw_0),
+                                                                                                                                                                       .i_hsize_0(hsize_0),
+                                                                                                                                                                       .i_hwdata_0(data_rand_0),
+                                                                                                                                                                       .o_hrdata_m0(data_out_m0),
+                                                                                                                                                                       .o_hready(hready)
 );
 
 //Initial blocks
