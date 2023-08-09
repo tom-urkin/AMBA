@@ -1,22 +1,22 @@
 //
 module AHB_IF(i_hclk,i_hreset,i_haddr,
               i_hresp_0,i_hrdata_0,i_hready_0,
-			  i_hresp_1,i_hrdata_1,i_hready_1,
-			  i_hresp_2,i_hrdata_2,i_hready_2,			  
-			  o_sel,o_hrdata,o_hresp,o_hready);
+              i_hresp_1,i_hrdata_1,i_hready_1,
+              i_hresp_2,i_hrdata_2,i_hready_2,
+              o_sel,o_hrdata,o_hresp,o_hready);
 
 
 //Parameters
-parameter ADDR_WIDTH=32;                                   //Address bus width
-parameter DATA_WIDTH=32;                                   //Data bus width
-parameter SLAVE_COUNT=2;                                   //Number of connected AHB slaves
+parameter ADDR_WIDTH=32;                                    //Address bus width
+parameter DATA_WIDTH=32;                                    //Data bus width
+parameter SLAVE_COUNT=2;                                    //Number of connected AHB slaves
 
-parameter REGISTER_SELECT_BITS=12;                         //Memory mapping - each slave's internal memory has maximum 2^REGISTER_SELECT_BITS-1 bytes (depends on MEMORY_DEPTH)
-parameter SLAVE_SELECT_BITS=20;                            //Memory mapping - width of slave address
+parameter REGISTER_SELECT_BITS=12;                          //Memory mapping - each slave's internal memory has maximum 2^REGISTER_SELECT_BITS-1 bytes (depends on MEMORY_DEPTH)
+parameter SLAVE_SELECT_BITS=20;                             //Memory mapping - width of slave address
 
-parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_0 = 0;       //Address of slave 0
-parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_1 = 1;       //ADdress of slave 1
-parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_2 = 2;       //ADdress of slave 1 
+parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_0 = 0;        //Address of slave 0
+parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_1 = 1;        //ADdress of slave 1
+parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_2 = 2;        //ADdress of slave 1 
  
 localparam MUX_SELECT = $clog2(SLAVE_COUNT);               //Number of bits required to select a single slave
 
@@ -51,9 +51,9 @@ logic [MUX_SELECT-1:0] mux_select;                         //'mux_select' signal
 always @(*)
   case (i_haddr[ADDR_WIDTH-1:ADDR_WIDTH-SLAVE_SELECT_BITS])  //[31:12] for defualt settings
     ADDR_SLAVE_0 : o_sel=3'b001;
-	ADDR_SLAVE_1 : o_sel=3'b010;
-	ADDR_SLAVE_2 : o_sel=3'b100;	
-	default      : o_sel=3'b001;
+    ADDR_SLAVE_1 : o_sel=3'b010;
+    ADDR_SLAVE_2 : o_sel=3'b100;
+    default      : o_sel=3'b001;
   endcase
 
 always @(posedge i_hclk or negedge i_hreset)
@@ -62,30 +62,30 @@ always @(posedge i_hclk or negedge i_hreset)
   else if (o_hready)
     case (i_haddr[ADDR_WIDTH-1:ADDR_WIDTH-SLAVE_SELECT_BITS])
       ADDR_SLAVE_0 :  mux_select<=$bits(mux_select)'(0);
-	  ADDR_SLAVE_1 :  mux_select<=$bits(mux_select)'(1);
-	  ADDR_SLAVE_2 :  mux_select<=$bits(mux_select)'(2);	  
-	  default      :  mux_select<=$bits(mux_select)'(0);
-	endcase
+      ADDR_SLAVE_1 :  mux_select<=$bits(mux_select)'(1);
+      ADDR_SLAVE_2 :  mux_select<=$bits(mux_select)'(2);	  
+      default      :  mux_select<=$bits(mux_select)'(0);
+    endcase
 
 always @(*)
   case (mux_select)
     $bits(mux_select)'(0) : begin
-	  o_hrdata = i_hrdata_0;
-	  o_hresp = i_hresp_0;
-	  o_hready = i_hready_0;
-	end
-	
-	$bits(mux_select)'(1) : begin
-	  o_hrdata = i_hrdata_1;
-	  o_hresp = i_hresp_1;
-	  o_hready = i_hready_1;
-	end
+      o_hrdata = i_hrdata_0;
+      o_hresp = i_hresp_0;
+      o_hready = i_hready_0;
+    end
 
-	$bits(mux_select)'(2) : begin
-	  o_hrdata = i_hrdata_2;
-	  o_hresp = i_hresp_2;
-	  o_hready = i_hready_2;
-	end	
+    $bits(mux_select)'(1) : begin
+      o_hrdata = i_hrdata_1;
+      o_hresp = i_hresp_1;
+      o_hready = i_hready_1;
+    end
+
+    $bits(mux_select)'(2) : begin
+      o_hrdata = i_hrdata_2;
+      o_hresp = i_hresp_2;
+      o_hready = i_hready_2;
+    end
   endcase 
 
 endmodule

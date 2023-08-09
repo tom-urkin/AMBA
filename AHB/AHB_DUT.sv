@@ -116,7 +116,7 @@ AHB_slave #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEMORY_DEPTH(MEMO
                                                                                                                                               .i_htrans(htrans_0),
                                                                                                                                               .i_hreadyin(o_hready),
                                                                                                                                               .i_hwdata(hwdata_0),
-				 
+
                                                                                                                                               .o_hreadyout(hreadyout_2),
                                                                                                                                               .o_hresp(hresp_2),
                                                                                                                                               .o_hrdata(hrdata_2)
@@ -126,24 +126,24 @@ AHB_slave #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .MEMORY_DEPTH(MEMO
 //AHB interconnect fabric instantiation
 AHB_IF #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .SLAVE_COUNT(SLAVE_COUNT)) f0(.i_hclk(i_hclk),
                                                                                          .i_hreset(i_hreset),
-															                             .i_haddr(hadder_0),
-																																		   
-															                             .i_hresp_0(hresp_0),
-															                             .i_hrdata_0(hrdata_0),
-															                             .i_hready_0(hreadyout_0),
-																																		   
-															                             .i_hresp_1(hresp_1),
-															                             .i_hrdata_1(hrdata_1),
-															                             .i_hready_1(hreadyout_1),			
+                                                                                         .i_haddr(hadder_0),
 
-															                             .i_hresp_2(hresp_2),
-															                             .i_hrdata_2(hrdata_2),
-															                             .i_hready_2(hreadyout_2),																  
-				 
+                                                                                         .i_hresp_0(hresp_0),
+                                                                                         .i_hrdata_0(hrdata_0),
+                                                                                         .i_hready_0(hreadyout_0),
+
+                                                                                         .i_hresp_1(hresp_1),
+                                                                                         .i_hrdata_1(hrdata_1),
+                                                                                         .i_hready_1(hreadyout_1),
+
+                                                                                         .i_hresp_2(hresp_2),
+                                                                                         .i_hrdata_2(hrdata_2),
+                                                                                         .i_hready_2(hreadyout_2),
+
                                                                                          .o_sel(hsel),
                                                                                          .o_hrdata(hrdata),
                                                                                          .o_hresp(hresp),
-														                                 .o_hready(o_hready)
+                                                                                         .o_hready(o_hready)
 );
 
 endmodule
