@@ -115,6 +115,17 @@ When a 'read' transfer is initiated, the read data in the granted master is comp
 **Let's go over some examplry bus operation**:
 	![AHB_simulation](./docs/AHB_simulation.jpg) 
 
+Here, three consecutive trafers are issued:
+1. 8-beat wrapping 'write' transfer of 4-byte (word) each to slave number 1 which prolongs the transfer by 1 hclk cycle via the hready signal.
+2. Single 'read' transfer of 4 bytes (word)  to slave number 1 which prolongs the transfer by 2 hclk cycles via the hready signal. Read data can be observed at the master's output (o_hrdata)
+3. 16-beat wrapping 'write' transfer of a single byte each to slove number 0 which prolongs the tranfer by 1 hclk cycle via the hready signal.
+
+Note: duration of the wait state is defined as a parameter in the slave source code which can be set when instnatiating the module.
+Note: the nuber of consecutive transfers is set when calling the 'initiate_transfer' task. In the attached TB file 5000 transfers are exetuted.
+
+**When runing the TB the terminal window exibits all 'read' transfers as follows**:
+	![AHB_terminal](./docs/AHB_terminal.jpg) 
+
 ## Support
 
 I will be happy to answer any questions.  
