@@ -70,11 +70,10 @@ When a 'write' transfer is initiated, a mimiced memory is updated in the TB file
 When a 'read' transfer is initiated, the read data in the granted master is compared with the relevant mimic memory and address by calling the 'compare' task.
 
 **Let's go over some examplry bus operation**:
-
 	![APB_sim](./docs/APB_sim.jpg) 
 
 
-As can be seen, three 'events' are shown in the above section of the TB:
+As can be seen, three 'events' are shown in the above simulation section:
 1. Two transfer requests by master_0 and master_1. Both masters initiate a 'write' command. The priority order is {M2 M0 M1} and therefore master_1 is granted access before master_0.
 2. One transfer request by master_2. Mater_2 initiates a 'read' transfer.
 3. Three transfer requests are given at the same clock edge. Master_0 and master_1 initiate a 'write' transfer while master_2 initiates a read transfer. 
