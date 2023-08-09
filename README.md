@@ -38,9 +38,9 @@ Note: Please note that all transfers are initiated by dedicated tasks in the TB 
 ## APB side 
 Traditionally, APB has a single master which is the AHB-APB bridge. Here,I have realized a multi-master multi-slave APB architecture for educational purposes **(and fun)**. Of course, the single-maseter multi-salve case can be realized wihtout any modifications to the source code.
 This side of the architecture comprises:
-	-APB masters : number of masters on the bus can be configured in the source code
-	-APB slaves : number of slaves on the bus can be configured in the source codes
-	-Interconnect fabric (IF): manages the requesting masters' access to the APB slaves
+-APB masters : number of masters on the bus can be configured in the source code
+-APB slaves : number of slaves on the bus can be configured in the source codes
+-Interconnect fabric (IF): manages the requesting masters' access to the APB slaves
 	
 A block diagram of the complete architecture is as follows:
 	![APB_arch](./docs/APB_arch.jpg) 
