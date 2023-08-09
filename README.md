@@ -88,6 +88,23 @@ As can be seen, the M1 transfer is carried first followed by the M0 transfer to 
 2. Second event
 	![APB_sim_2](./docs/APB_sim_2.jpg) 
 
+## AHB side 
+Here,AHB-lite with single master and multiple slaves is realized in accordance with conventional AHB-lite architecture. 
+This side of the architecture comprises:
+
+-**AHB master** : supports single transfer as well as **incrementing and wrapping** bursts of 4,8 and 16 beats. 
+
+-**APB slaves** : number of slaves on the bus can be configured in the source codes
+
+-**Interconnect fabric (IF)**: manages the requesting masters' access to the APB slaves
+
+A block diagram of the complete architecture is as follows:
+	![AHB_arch](./docs/AHB_arch.jpg) 
+
+
+The buses comprise the follwing signals:
+	![APB_buses](./docs/APB_buses.jpg) 
+	
 
 ## Support
 
