@@ -1,6 +1,6 @@
 # SystemVerilog description of AMBA 
 
-> Complete AMBA architecture and testbench in SystemVerilog - AHB side modules and AHB-APB bridge will be uploaded soon  
+> Complete AMBA architecture and testbench in SystemVerilog - AHB-APB bridge will be uploaded soon  
 
 ## Get Started
 
@@ -11,16 +11,19 @@ The source files for the APB side of the architecture:
 - [APB Interconnect Fabric](./APB/apb_interconnect_fabric.sv)
 - [APB_DUT](./APB/APB_DUT.sv)
 - [APB_TB](./APB/APB_TB.sv)
-- [wave](./APB/wave_apb.sv)
+- [wave_apb](./APB/wave_apb.sv)
 
 The source files for the AHB side of the architecture:
 
-- XXX
-- XXX
+- [AHB_master](./AHB/AHB_master.sv)
+- [AHB_slave](./AHB/AHB_slave.sv)
+- [AHB_DUT](./AHB/AHB_DUT.sv)
+- [AHB_IF](./AHB/AHB_IF.sv)
+- [AHB_TB](./AHB/AHB_TB.sv)
+- [wave_AHB](./AHB/wave_AHB.sv)
 
 The source files for the AHB-APB bridge:
 
-- XXX
 - XXX
 
 It is recomended to go over the various modules in the following order:
@@ -30,10 +33,10 @@ It is recomended to go over the various modules in the following order:
 4. Complete architecture
 The following sections are written in this order.
 
-Note: Please note that all transfers are initiated by dedicated tasks in the TB file. This is since the master and slave modules of the APB/AHB sides comprise the necessary logic to carry the AHB/APB protocol and perform read/write operations to a memory block within the slave modules.
+Note: Please note that all transfers are initiated by dedicated tasks in the TB file. This master and slave modules of the APB/AHB sides comprise the necessary logic to carry the AHB/APB protocol and perform read/write operations to a memory block within the slave modules.
 
 ## APB side 
-Traditionally, APB has a single master which is aht AHB-APB bridge. Here,I have realized a multi-master multi-slave APB architecture for educational purposes (and fun). Of course, the single-maseter multi-salve case can be realized wihtout any modifications to the source code.
+Traditionally, APB has a single master which is the AHB-APB bridge. Here,I have realized a multi-master multi-slave APB architecture for educational purposes **(and fun)**. Of course, the single-maseter multi-salve case can be realized wihtout any modifications to the source code.
 This side of the architecture comprises:
 	-APB masters : number of masters on the bus can be configured in the source code
 	-APB slaves : number of slaves on the bus can be configured in the source codes
