@@ -107,74 +107,74 @@ output logic [MASTER_COUNT-1:0] o_gnt;                               //grant vec
 APB_Master #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .SLAVE_COUNT(SLAVE_COUNT), .ADDR_MSB_len(ADDR_MSB_len), .ADDR_SLAVE_0(ADDR_SLAVE_0), .ADDR_SLAVE_1(ADDR_SLAVE_1), .ADDR_SLAVE_2(ADDR_SLAVE_2)) M0(
                 .i_prstn(i_prstn),                                                           
                 .i_pclk(i_pclk),      
-				
+
                 .i_command(i_rw_0),                                                                     
                 .i_start(i_start_0),                                                           
                 .i_data_in(i_data_in_0),                                                                       
                 .i_addr_in({i_slave_rand_0,i_addr_rand_0,{WORD_LEN{1'b0}}}),  //Access is word-based. For 32-bit word and 32 registers in each salve: {000...000||XXXXX||00}
                 
-				.i_prdata(prdata_m&{DATA_WIDTH{o_gnt[0]}}),                                                        
-				.i_pready(pready_m&o_gnt[0]),   
-				.i_pslverr(pslverr_m&o_gnt[0]),
+                .i_prdata(prdata_m&{DATA_WIDTH{o_gnt[0]}}),                                                        
+                .i_pready(pready_m&o_gnt[0]),   
+                .i_pslverr(pslverr_m&o_gnt[0]),
                 
-				.o_paddr(paddr_m0),                                                          
+                .o_paddr(paddr_m0),                                                          
                 .o_pwrite(pwrite_m0),                                                        
                 .o_psel(psel_m0),                                                            
                 .o_penable(penable_m0),                                                      
-				.o_pwdata(pwdata_m0),                                                        
-				.o_data_out(o_data_out_m0),
-				.o_transfer_status(o_transfer_status_m0),
-				.o_valid(o_valid_m0),
-				.o_ready(o_ready_m0)
+                .o_pwdata(pwdata_m0),                                                        
+                .o_data_out(o_data_out_m0),
+                .o_transfer_status(o_transfer_status_m0),
+                .o_valid(o_valid_m0),
+                .o_ready(o_ready_m0)
                 );
 
 
 APB_Master #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .SLAVE_COUNT(SLAVE_COUNT), .ADDR_MSB_len(ADDR_MSB_len), .ADDR_SLAVE_0(ADDR_SLAVE_0), .ADDR_SLAVE_1(ADDR_SLAVE_1), .ADDR_SLAVE_2(ADDR_SLAVE_2)) M1(
                 .i_prstn(i_prstn),                                                           
                 .i_pclk(i_pclk),    
-				
+
                 .i_command(i_rw_1),                                                                     
                 .i_start(i_start_1),                                                           
                 .i_data_in(i_data_in_1),                                                                       
                 .i_addr_in({i_slave_rand_1,i_addr_rand_1,{WORD_LEN{1'b0}}}),  //Access is word-based. For 32-bit word and 32 registers in each salve: {000...000||XXXXX||00}
 
                 .i_prdata(prdata_m&{DATA_WIDTH{o_gnt[1]}}),                                                        
-				.i_pready(pready_m&o_gnt[1]),   
-				.i_pslverr(pslverr_m&o_gnt[1]),
+                .i_pready(pready_m&o_gnt[1]),   
+                .i_pslverr(pslverr_m&o_gnt[1]),
 
                 .o_paddr(paddr_m1),                                                          
                 .o_pwrite(pwrite_m1),                                                        
                 .o_psel(psel_m1),                                                            
                 .o_penable(penable_m1),                                                      
-				.o_pwdata(pwdata_m1),                                                        
-				.o_data_out(o_data_out_m1),
-				.o_transfer_status(o_transfer_status_m1),
-				.o_valid(o_valid_m1),
-				.o_ready(o_ready_m1)
+                .o_pwdata(pwdata_m1),                                                        
+                .o_data_out(o_data_out_m1),
+                .o_transfer_status(o_transfer_status_m1),
+                .o_valid(o_valid_m1),
+                .o_ready(o_ready_m1)
                 );
 
 APB_Master #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .SLAVE_COUNT(SLAVE_COUNT), .ADDR_MSB_len(ADDR_MSB_len), .ADDR_SLAVE_0(ADDR_SLAVE_0), .ADDR_SLAVE_1(ADDR_SLAVE_1), .ADDR_SLAVE_2(ADDR_SLAVE_2)) M2(
                 .i_prstn(i_prstn),                                                           
                 .i_pclk(i_pclk),    
-				
+
                 .i_command(i_rw_2),                                                                     
                 .i_start(i_start_2),                                                           
                 .i_data_in(i_data_in_2),                                                                       
                 .i_addr_in({i_slave_rand_2,i_addr_rand_2,{WORD_LEN{1'b0}}}),  //Access is word-based. For 32-bit word and 32 registers in each salve: {000...000||XXXXX||00}
 
                 .i_prdata(prdata_m&{DATA_WIDTH{o_gnt[2]}}),                                                        
-				.i_pready(pready_m&o_gnt[2]),   
-				.i_pslverr(pslverr_m&o_gnt[2]),
+                .i_pready(pready_m&o_gnt[2]),   
+                .i_pslverr(pslverr_m&o_gnt[2]),
 
                 .o_paddr(paddr_m2),                                                          
                 .o_pwrite(pwrite_m2),                                                        
                 .o_psel(psel_m2),                                                            
                 .o_penable(penable_m2),                                                      
-				.o_pwdata(pwdata_m2),                                                        
-				.o_data_out(o_data_out_m2),
-				.o_transfer_status(o_transfer_status_m2),
-				.o_valid(o_valid_m2),
-				.o_ready(o_ready_m2)
+                .o_pwdata(pwdata_m2),                                                        
+                .o_data_out(o_data_out_m2),
+                .o_transfer_status(o_transfer_status_m2),
+                .o_valid(o_valid_m2),
+                .o_ready(o_ready_m2)
                 );
 
 //APB slave instantiation
@@ -187,8 +187,8 @@ APB_Slave #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .REG_NUM(REG_NUM),
                 .i_penable(penable_s),                                                      
                 .i_pwdata(pwdata_s),                                                         
                 .o_prdata(prdata_s0),                                                        
-				.o_pready(pready_s0),                                                        
-				.o_pslverr(pslverr_s0)
+                .o_pready(pready_s0),                                                        
+                .o_pslverr(pslverr_s0)
                 );
 
 APB_Slave #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .REG_NUM(REG_NUM), .WAIT_WRITE(1), .WAIT_READ(2)) S1(
