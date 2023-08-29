@@ -80,7 +80,7 @@ always @(posedge i_pclk or negedge i_prstn)
       ADDR_SLAVE_0: o_psel<=3'b001;
       ADDR_SLAVE_1: o_psel<=3'b010;
       ADDR_SLAVE_2: o_psel<=3'b100;
-    endcase
+      endcase
          
       o_pwdata<=(i_command) ? i_data_in : o_pwdata;            //Update the write bus for a write operation
       o_penable<=1'b0;                                         //PENABLE signal rises to logic high during the ENABLE phase of the transmission 	
