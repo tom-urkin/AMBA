@@ -37,10 +37,10 @@ logic [WAIT_MAX-1:0] count_pready;                            //Wait state count
 //Slave initialization and i_pwrdata sampling for a 'write' command
 always @(posedge i_pclk or negedge i_prstn)
   if (!i_prstn)
-	mem<='0;	
+    mem<='0;
   else if ((i_psel)&&(i_penable))
     if ((i_pwrite)&&(o_pready))
-	  mem[i_paddr[REG_NUM+WORD_LEN-1:WORD_LEN]]<=i_pwdata;
+      mem[i_paddr[REG_NUM+WORD_LEN-1:WORD_LEN]]<=i_pwdata;
 
 //pready signal generation and o_prdata update for a 'read' command
 always @(posedge i_pclk or negedge i_prstn)
@@ -50,36 +50,36 @@ always @(posedge i_pclk or negedge i_prstn)
   end
   else if ((i_psel==1'b1)&&(i_penable==1'b0)) begin
     count_pready<='0; 
-	if ((i_pwrite)&&(WAIT_WRITE=='0)) begin                                //Write commnad and no wait states
-	  o_pready<=1'b1;
-	end
-	else if ((~i_pwrite)&&(WAIT_READ=='0)) begin                           //Read commnad and no wait states
-	  o_pready<=1'b1;
-	  o_prdata<=mem[i_paddr[REG_NUM+WORD_LEN-1:WORD_LEN]];                 //Updating the o_prdata together with the rising edge of pready
-	 end
-	else o_pready<=1'b0;
+    if ((i_pwrite)&&(WAIT_WRITE=='0)) begin                                //Write commnad and no wait states
+    o_pready<=1'b1;
+    end
+    else if ((~i_pwrite)&&(WAIT_READ=='0)) begin                           //Read commnad and no wait states
+      o_pready<=1'b1;
+      o_prdata<=mem[i_paddr[REG_NUM+WORD_LEN-1:WORD_LEN]];                 //Updating the o_prdata together with the rising edge of pready
+    end
+    else o_pready<=1'b0;
   end
   
   else if ((i_pwrite)&&(i_psel))	                                       //Write commnad with 'WAIT_WRITE' wait states
     if (count_pready==$bits(count_pready)'(WAIT_WRITE-1)) begin
-	  o_pready<=1'b1;
-	  count_pready<=count_pready+$bits(count_pready)'(1);	  
-	end
-	else if (count_pready==$bits(count_pready)'(WAIT_WRITE))
+      o_pready<=1'b1;
+      count_pready<=count_pready+$bits(count_pready)'(1);	  
+    end
+    else if (count_pready==$bits(count_pready)'(WAIT_WRITE))
       o_pready<=1'b0;	
-	else
-	  count_pready<=count_pready+$bits(count_pready)'(1);
-	  
+    else
+      count_pready<=count_pready+$bits(count_pready)'(1);
+
   else if ((~i_pwrite)&&(i_psel))                                          //Read command with 'WAIT_READ' wait states
     if (count_pready==$bits(count_pready)'(WAIT_READ-1)) begin                    
-	  o_pready<=1'b1;
-	  o_prdata<=mem[i_paddr[REG_NUM+WORD_LEN-1:WORD_LEN]];                 //Updating the o_prdata with the rising edge of pready
-	  count_pready<=count_pready+$bits(count_pready)'(1);		  
-	end
-	else if (count_pready==$bits(count_pready)'(WAIT_READ))
-	  o_pready<=1'b0;
-	else
-	  count_pready<=count_pready+$bits(count_pready)'(1);	
+      o_pready<=1'b1;
+      o_prdata<=mem[i_paddr[REG_NUM+WORD_LEN-1:WORD_LEN]];                 //Updating the o_prdata with the rising edge of pready
+      count_pready<=count_pready+$bits(count_pready)'(1);
+    end
+    else if (count_pready==$bits(count_pready)'(WAIT_READ))
+      o_pready<=1'b0;
+    else
+      count_pready<=count_pready+$bits(count_pready)'(1);
 
 
 //Error signal generation

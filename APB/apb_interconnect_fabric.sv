@@ -42,13 +42,14 @@ logic [PRIORITY_WIDTH-1:0] gnt_dec;                                 //Granted ma
 
 integer i;                                                          //Used to update the priority after completion of a transfer 
 integer j;                                                          //Used to calculate the winning master index within the priority vector
+
 //HDL code
 //Update priority queque
 always @(posedge i_clk or negedge i_rst)
   if (!i_rst) begin
-	priority_state<={MASTER_2,MASTER_1,MASTER_0};                   //Initial priority order 
+    priority_state<={MASTER_2,MASTER_1,MASTER_0};                   //Initial priority order 
   end
-  else if (i_update) begin                     
+  else if (i_update) begin
     priority_state<=next_priority_state;
     o_end_of_transfer<=1'b1;	
   end
@@ -58,11 +59,11 @@ always @(posedge i_clk or negedge i_rst)
 always @(*) begin
   for (i=0; i<MASTER_COUNT; i++)
     if (i<sel_idx_dec)
-		next_priority_state[i]=priority_state[i];                  //Keeps the priority status of masters which have not initiated a transfer request
-	else if (i==MASTER_COUNT-1)
-	  next_priority_state[i]=priority_state[sel_idx_dec];          //The master who won the arvitration is sent to the back of the line
-	else
-	  next_priority_state[i]=priority_state[i+1];
+      next_priority_state[i]=priority_state[i];                    //Keeps the priority status of masters which have not initiated a transfer request
+    else if (i==MASTER_COUNT-1)
+      next_priority_state[i]=priority_state[sel_idx_dec];          //The master who won the arvitration is sent to the back of the line
+    else
+      next_priority_state[i]=priority_state[i+1];
 end
 
 //Rotate right
@@ -71,7 +72,7 @@ assign request_vec_rotate = request_vec_rotate_double[MASTER_COUNT-1:0];
 
 //Priority encoder
 assign higher_priority[0]=1'b0;
-//assign higher_priority[MASTER_COUNT-1:1] = higher_priority[MASTER_COUNT-2:0]|request_vec_rotate[MASTER_COUNT-2:0];   //CHECK!!!
+//assign higher_priority[MASTER_COUNT-1:1] = higher_priority[MASTER_COUNT-2:0]|request_vec_rotate[MASTER_COUNT-2:0];
 assign higher_priority[1]=higher_priority[0]|request_vec_rotate[0];
 assign higher_priority[2]=higher_priority[1]|request_vec_rotate[1];
 
@@ -80,13 +81,13 @@ assign priority_tmp = request_vec_rotate[MASTER_COUNT-1:0]&~higher_priority[MAST
 //Rotate left
 assign priority_tmp_left = {priority_tmp,priority_tmp}<<priority_state[0];
 
-assign o_gnt = priority_tmp_left[2*MASTER_COUNT-1:MASTER_COUNT];                         //Grant vector comprises the MASTER_COUNT LSBs (after the shift left operation)
+assign o_gnt = priority_tmp_left[2*MASTER_COUNT-1:MASTER_COUNT];                         //Grant vector comprises the MASTER_COUNT MSBs (after the shift left operation)
 assign gnt_dec = (o_gnt==3'b001) ? MASTER_0 : (o_gnt==3'b010) ? MASTER_1 : MASTER_2;     //Convert the winning master from one-hot to decimal encoding
 
 always @(*)
   for (j=0; j<MASTER_COUNT; j++)
     if (priority_state[j]==gnt_dec)
-	  sel_idx_dec=j;                                                                     //Calculate the index of the winning master in the priority vector
+      sel_idx_dec=j;                                                                     //Calculate the index of the winning master in the priority vector
 
 endmodule
 
@@ -99,7 +100,6 @@ i_paddr_m2,i_pwrite_m2,i_psel_m2,i_penable_m2,i_pwdata_m2,
 i_prdata_s0,i_pready_s0,i_pslverr_s0,
 i_prdata_s1,i_pready_s1,i_pslverr_s1,
 i_prdata_s2,i_pready_s2,i_pslverr_s2,
-
 
 o_paddr,o_pwrite,o_psel,o_penable,o_pwdata,o_prdata,o_pready,o_pslverr,
 o_gnt);
@@ -167,198 +167,185 @@ logic end_of_transfer;                                         //Indicates pervi
 always @(posedge i_pclk or negedge i_prstn)
   if (!i_prstn) begin
     o_paddr<='0;
-	o_pwrite<='0;
-	o_psel<='0;
-	o_penable<='0;
-	o_pwdata<='0;
-	o_prdata<='0; 
+    o_pwrite<='0;
+    o_psel<='0;
+    o_penable<='0;
+    o_pwdata<='0;
+    o_prdata<='0; 
     o_pready<=1'b0;
-	o_pslverr<=1'b0;
+    o_pslverr<=1'b0;
   end
   else begin
     case (o_gnt)
-	
-	3'b001:                                                  //Master 0 has won the arbitration
-	if ((end_of_transfer==1'b1)&&(|request_vec)) begin       //If a transfer has ended (pready=1'b1) and there are masters that lost the arbitration. Generate a single logic-low penable to comply with APB protocol.
+    3'b001:                                                    //Master 0 has won the arbitration
+      if ((end_of_transfer==1'b1)&&(|request_vec)) begin       //If a transfer has ended (pready=1'b1) and there are masters that lost the arbitration. Generate a single logic-low penable to comply with APB protocol.
+        o_paddr<=i_paddr_m0;
+        o_pwrite<=i_pwrite_m0;
+        o_psel<=i_psel_m0;
+        o_penable<=1'b0;
+        o_pwdata<=i_pwdata_m0;  
+
+        case (i_psel_m0)
+        3'b001: begin
+          o_prdata<=i_prdata_s0;
+          o_pready<=i_pready_s0;
+          o_pslverr<=i_pslverr_s0;	
+        end
+        3'b010: begin
+          o_prdata<=i_prdata_s1;
+          o_pready<=i_pready_s1;
+          o_pslverr<=i_pslverr_s1;	
+        end
+        3'b100: begin
+          o_prdata<=i_prdata_s2;
+          o_pready<=i_pready_s2;
+          o_pslverr<=i_pslverr_s2;
+        end
+      endcase
+
+    end
+    else begin
       o_paddr<=i_paddr_m0;
-	  o_pwrite<=i_pwrite_m0;
-	  o_psel<=i_psel_m0;
-	  o_penable<=1'b0;
-	  o_pwdata<=i_pwdata_m0;  
-	  
-	  case (i_psel_m0)
-	  
-	  3'b001: begin
-	    o_prdata<=i_prdata_s0;
-	    o_pready<=i_pready_s0;
-	    o_pslverr<=i_pslverr_s0;	
-      end
-	  3'b010: begin
-	    o_prdata<=i_prdata_s1;
-	    o_pready<=i_pready_s1;
-	    o_pslverr<=i_pslverr_s1;	
-      end
-	  3'b100: begin
-	    o_prdata<=i_prdata_s2;
-	    o_pready<=i_pready_s2;
-	    o_pslverr<=i_pslverr_s2;
-      end
-      endcase	
-	  
-	end 
-	else begin
-      o_paddr<=i_paddr_m0;
-	  o_pwrite<=i_pwrite_m0;
-	  o_psel<=i_psel_m0;
-	  o_penable<=i_penable_m0;
-	  o_pwdata<=i_pwdata_m0; 
+      o_pwrite<=i_pwrite_m0;
+      o_psel<=i_psel_m0;
+      o_penable<=i_penable_m0;
+      o_pwdata<=i_pwdata_m0; 
 
-	  case (i_psel_m0)
-	  
-	  3'b001: begin
-	    o_prdata<=i_prdata_s0;
-	    o_pready<=i_pready_s0;
-	    o_pslverr<=i_pslverr_s0;	
+      case (i_psel_m0)
+      3'b001: begin
+        o_prdata<=i_prdata_s0;
+        o_pready<=i_pready_s0;
+        o_pslverr<=i_pslverr_s0;	
       end
-	  3'b010: begin
-	    o_prdata<=i_prdata_s1;
-	    o_pready<=i_pready_s1;
-	    o_pslverr<=i_pslverr_s1;	
+      3'b010: begin
+        o_prdata<=i_prdata_s1;
+        o_pready<=i_pready_s1;
+        o_pslverr<=i_pslverr_s1;	
       end
-	  3'b100: begin
-	    o_prdata<=i_prdata_s2;
-	    o_pready<=i_pready_s2;
-	    o_pslverr<=i_pslverr_s2;
+      3'b100: begin
+        o_prdata<=i_prdata_s2;
+        o_pready<=i_pready_s2;
+        o_pslverr<=i_pslverr_s2;
       end
       endcase
-	  
-	end
+end
 
-	3'b010: 	                                        //Master 1 has won the arbitration
-	if ((end_of_transfer==1'b1)&&(|request_vec)) begin 	//If a transfer has ended (pready=1'b1) and there are masters that lost the arbitration. Generate a single logic-low penable to comply with APB protocol.
+    3'b010:                                               //Master 1 has won the arbitration
+      if ((end_of_transfer==1'b1)&&(|request_vec)) begin  //If a transfer has ended (pready=1'b1) and there are masters that lost the arbitration. Generate a single logic-low penable to comply with APB protocol.
+        o_paddr<=i_paddr_m1;
+        o_pwrite<=i_pwrite_m1;
+        o_psel<=i_psel_m1;
+        o_penable<=1'b0;
+        o_pwdata<=i_pwdata_m1;  
+
+        case (i_psel_m1)
+        3'b001: begin
+          o_prdata<=i_prdata_s0;
+          o_pready<=i_pready_s0;
+          o_pslverr<=i_pslverr_s0;	
+        end
+        3'b010: begin
+          o_prdata<=i_prdata_s1;
+          o_pready<=i_pready_s1;
+          o_pslverr<=i_pslverr_s1;	
+        end
+        3'b100: begin
+          o_prdata<=i_prdata_s2;
+          o_pready<=i_pready_s2;
+          o_pslverr<=i_pslverr_s2;
+        end
+      endcase
+end 
+  
+  else begin
       o_paddr<=i_paddr_m1;
-	  o_pwrite<=i_pwrite_m1;
-	  o_psel<=i_psel_m1;
-	  o_penable<=1'b0;
-	  o_pwdata<=i_pwdata_m1;  
-	  
-	  case (i_psel_m1)
-	  
-	  3'b001: begin
-	    o_prdata<=i_prdata_s0;
-	    o_pready<=i_pready_s0;
-	    o_pslverr<=i_pslverr_s0;	
+      o_pwrite<=i_pwrite_m1;
+      o_psel<=i_psel_m1;
+      o_penable<=i_penable_m1;
+      o_pwdata<=i_pwdata_m1; 
+
+      case (i_psel_m1)
+      3'b001: begin
+        o_prdata<=i_prdata_s0;
+        o_pready<=i_pready_s0;
+        o_pslverr<=i_pslverr_s0;	
       end
-	  3'b010: begin
-	    o_prdata<=i_prdata_s1;
-	    o_pready<=i_pready_s1;
-	    o_pslverr<=i_pslverr_s1;	
+      3'b010: begin
+        o_prdata<=i_prdata_s1;
+        o_pready<=i_pready_s1;
+        o_pslverr<=i_pslverr_s1;	
       end
-	  3'b100: begin
-	    o_prdata<=i_prdata_s2;
-	    o_pready<=i_pready_s2;
-	    o_pslverr<=i_pslverr_s2;
+      3'b100: begin
+        o_prdata<=i_prdata_s2;
+        o_pready<=i_pready_s2;
+        o_pslverr<=i_pslverr_s2;
       end
       endcase
-	  
-	end 
-	else begin
-      o_paddr<=i_paddr_m1;
-	  o_pwrite<=i_pwrite_m1;
-	  o_psel<=i_psel_m1;
-	  o_penable<=i_penable_m1;
-	  o_pwdata<=i_pwdata_m1; 
+    end
 
-	  case (i_psel_m1)
-	  
-	  3'b001: begin
-	    o_prdata<=i_prdata_s0;
-	    o_pready<=i_pready_s0;
-	    o_pslverr<=i_pslverr_s0;	
-      end
-	  3'b010: begin
-	    o_prdata<=i_prdata_s1;
-	    o_pready<=i_pready_s1;
-	    o_pslverr<=i_pslverr_s1;	
-      end
-	  3'b100: begin
-	    o_prdata<=i_prdata_s2;
-	    o_pready<=i_pready_s2;
-	    o_pslverr<=i_pslverr_s2;
-      end
-      endcase	  
-	end
+    3'b100:                                                 //Master 2 has won the arbitration
+      if ((end_of_transfer==1'b1)&&(|request_vec)) begin    //If a transfer has ended (pready=1'b1) and there are masters that lost the arbitration. Generate a single logic-low penable to comply with APB protocol.
+        o_paddr<=i_paddr_m2;
+        o_pwrite<=i_pwrite_m2;
+        o_psel<=i_psel_m2;
+        o_penable<=1'b0;
+        o_pwdata<=i_pwdata_m2;  
 
-	3'b100: 	                                          //Master 2 has won the arbitration
-	if ((end_of_transfer==1'b1)&&(|request_vec)) begin    //If a transfer has ended (pready=1'b1) and there are masters that lost the arbitration. Generate a single logic-low penable to comply with APB protocol.
-      o_paddr<=i_paddr_m2;
-	  o_pwrite<=i_pwrite_m2;
-	  o_psel<=i_psel_m2;
-	  o_penable<=1'b0;
-	  o_pwdata<=i_pwdata_m2;  
-	  
-	  case (i_psel_m2)
-	  
-	  3'b001: begin
-	    o_prdata<=i_prdata_s0;
-	    o_pready<=i_pready_s0;
-	    o_pslverr<=i_pslverr_s0;	
+      case (i_psel_m2)
+      3'b001: begin
+        o_prdata<=i_prdata_s0;
+        o_pready<=i_pready_s0;
+        o_pslverr<=i_pslverr_s0;	
       end
-	  3'b010: begin
-	    o_prdata<=i_prdata_s1;
-	    o_pready<=i_pready_s1;
-	    o_pslverr<=i_pslverr_s1;	
+      3'b010: begin
+        o_prdata<=i_prdata_s1;
+        o_pready<=i_pready_s1;
+        o_pslverr<=i_pslverr_s1;	
       end
-	  3'b100: begin
-	    o_prdata<=i_prdata_s2;
-	    o_pready<=i_pready_s2;
-	    o_pslverr<=i_pslverr_s2;
+      3'b100: begin
+        o_prdata<=i_prdata_s2;
+        o_pready<=i_pready_s2;
+        o_pslverr<=i_pslverr_s2;
       end
       endcase
-	end 
-	else begin
+    end 
+    else begin
       o_paddr<=i_paddr_m2;
-	  o_pwrite<=i_pwrite_m2;
-	  o_psel<=i_psel_m2;
-	  o_penable<=i_penable_m2;
-	  o_pwdata<=i_pwdata_m2;
+      o_pwrite<=i_pwrite_m2;
+      o_psel<=i_psel_m2;
+      o_penable<=i_penable_m2;
+      o_pwdata<=i_pwdata_m2;
 
-	  case (i_psel_m2)
-	  
-	  3'b001: begin
-	    o_prdata<=i_prdata_s0;
-	    o_pready<=i_pready_s0;
-	    o_pslverr<=i_pslverr_s0;	
+      case (i_psel_m2)
+      3'b001: begin
+        o_prdata<=i_prdata_s0;
+        o_pready<=i_pready_s0;
+        o_pslverr<=i_pslverr_s0;	
       end
-	  3'b010: begin
-	    o_prdata<=i_prdata_s1;
-	    o_pready<=i_pready_s1;
-	    o_pslverr<=i_pslverr_s1;	
+      3'b010: begin
+        o_prdata<=i_prdata_s1;
+        o_pready<=i_pready_s1;
+        o_pslverr<=i_pslverr_s1;	
       end
-	  3'b100: begin
-	    o_prdata<=i_prdata_s2;
-	    o_pready<=i_pready_s2;
-	    o_pslverr<=i_pslverr_s2;
+      3'b100: begin
+        o_prdata<=i_prdata_s2;
+        o_pready<=i_pready_s2;
+        o_pslverr<=i_pslverr_s2;
       end
-      endcase	  
-	end
+      endcase
+    end
 
-	endcase
-	/*
-	o_prdata<=i_prdata;
-	o_pready<=i_pready;
-	o_pslverr<=i_pslverr;
-	*/
+    endcase
   end
 
 assign request_vec={|i_psel_m2,|i_psel_m1,|i_psel_m0};     //Request vector. Values are determined by the masters wishing to get access to the bus
 
 //arbiter instantiation
 arbiter #(.MASTER_COUNT(MASTER_COUNT), .SLAVE_COUNT(SLAVE_COUNT)) A0(.i_clk(i_pclk),
-			.i_rst(i_prstn),
-			.i_request_vec(request_vec),
-			.i_update(o_pready),
-			.o_gnt(o_gnt),
-			.o_end_of_transfer(end_of_transfer)
-			);
+                                                                     .i_rst(i_prstn),
+                                                                     .i_request_vec(request_vec),
+                                                                     .i_update(o_pready),
+                                                                     .o_gnt(o_gnt),
+                                                                     .o_end_of_transfer(end_of_transfer)
+);
 endmodule
