@@ -58,14 +58,14 @@ always @(posedge i_hclk or negedge i_hreset)
     wait_counter<='0;
     write_en<=1'b0;
   end
-  else if ((i_hsel&&i_hreadyin)||(hsel_samp&&!o_hreadyout))                                    //Slave os activated if on a positive edge hready is logic high and i_sel is logic high (first clock cycle) or after it has been activated but inserts wait states
+  else if ((i_hsel&&i_hreadyin)||(hsel_samp&&!o_hreadyout))                                    //Slave is activated if on a positive edge hready is logic high and i_sel is logic high (first clock cycle) or after it has been activated but inserts wait states
     case (i_htrans)
       IDLE: begin
       o_hresp<=1'b0;                                                                           //Slave must provide zero wait state OKAY response to IDLE transfers and the transfer must be ignored by the slave
       o_hreadyout<=1'b1;                                                                       //Issue logic high hready signal during IDLE state
       wait_counter<='0;
       write_en<=1'b0;
-	  hsel_samp<=i_hsel;                                                                       //Sampled i_hsel
+      hsel_samp<=i_hsel;                                                                         //Sampled i_hsel
       end
 
       default: begin
@@ -75,7 +75,7 @@ always @(posedge i_hclk or negedge i_hreset)
           hwrite_samp<=i_hwrite;                                                               //Sampled i_hwrite
           haddr_samp<={{SLAVE_SELECT_BITS{1'b0}},i_haddr[REGISTER_SELECT_BITS-1:0]};           //Sampled i_haddr
           hsize_samp<=i_hsize;                                                                 //Sampled i_hsize  
-		  hsel_samp<=i_hsel;                                                                   //Sampled i_hsel
+          hsel_samp<=i_hsel;                                                                       //Sampled i_hsel
           if (i_hwrite==1'b1)
             hwdata_samp<=i_hwdata;                                                             //Sampled i_hwdata
         end 
@@ -107,9 +107,9 @@ always @(posedge i_hclk or negedge i_hreset)
       end
     endcase
 else begin
-    o_hreadyout<=1'b1;
-	hsel_samp<=1'b0;
-	end
+  o_hreadyout<=1'b1;
+  hsel_samp<=1'b0;
+end
 
 //Execute the 'write' transfer: 'write_en' rises to logic high when the data is ready to be stored into the slave memory
 //Write operation follows big endian: MSB byte is stored in haddr and LSB byte is haddr+x

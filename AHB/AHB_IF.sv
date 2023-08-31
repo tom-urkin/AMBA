@@ -7,44 +7,44 @@ module AHB_IF(i_hclk,i_hreset,i_haddr,
 
 
 //Parameters
-parameter ADDR_WIDTH=32;                                    //Address bus width
-parameter DATA_WIDTH=32;                                    //Data bus width
-parameter SLAVE_COUNT=2;                                    //Number of connected AHB slaves
+parameter ADDR_WIDTH=32;                                     //Address bus width
+parameter DATA_WIDTH=32;                                     //Data bus width
+parameter SLAVE_COUNT=2;                                     //Number of connected AHB slaves
 
-parameter REGISTER_SELECT_BITS=12;                          //Memory mapping - each slave's internal memory has maximum 2^REGISTER_SELECT_BITS-1 bytes (depends on MEMORY_DEPTH)
-parameter SLAVE_SELECT_BITS=20;                             //Memory mapping - width of slave address
+parameter REGISTER_SELECT_BITS=12;                           //Memory mapping - each slave's internal memory has maximum 2^REGISTER_SELECT_BITS-1 bytes (depends on MEMORY_DEPTH)
+parameter SLAVE_SELECT_BITS=20;                              //Memory mapping - width of slave address
 
-parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_0 = 0;        //Address of slave 0
-parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_1 = 1;        //ADdress of slave 1
-parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_2 = 2;        //ADdress of slave 1 
+parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_0 = 0;          //Address of slave 0
+parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_1 = 1;          //ADdress of slave 1
+parameter [SLAVE_SELECT_BITS-1:0] ADDR_SLAVE_2 = 2;          //ADdress of slave 1 
  
-localparam MUX_SELECT = $clog2(SLAVE_COUNT);               //Number of bits required to select a single slave
+localparam MUX_SELECT = $clog2(SLAVE_COUNT);                 //Number of bits required to select a single slave
 
 //Inputs 
-input logic i_hclk;                                        //All signal timings are related to the rising edge of hclk
-input logic i_hreset;                                      //Active low bus reset
-input logic [ADDR_WIDTH-1:0] i_haddr;                      //Input address from which both a slave is selected (MSBs) and internal memory slot (LSBs)
+input logic i_hclk;                                          //All signal timings are related to the rising edge of hclk
+input logic i_hreset;                                        //Active low bus reset
+input logic [ADDR_WIDTH-1:0] i_haddr;                        //Input address from which both a slave is selected (MSBs) and internal memory slot (LSBs)
 
-input logic i_hresp_0;                                     //Slave 0 transfer response
-input logic [DATA_WIDTH-1:0] i_hrdata_0;                   //Slave 0 read data bus
-input logic i_hready_0;                                    //Slave 0 'hreadyout' signal
+input logic i_hresp_0;                                       //Slave 0 transfer response
+input logic [DATA_WIDTH-1:0] i_hrdata_0;                     //Slave 0 read data bus
+input logic i_hready_0;                                      //Slave 0 'hreadyout' signal
 
-input logic i_hresp_1;                                     ///Slave 1 transfer response
-input logic [DATA_WIDTH-1:0] i_hrdata_1;                   //Slave 1 read data bus
-input logic i_hready_1;                                    //Slave 1 'hreadyout' signal
+input logic i_hresp_1;                                       //Slave 1 transfer response
+input logic [DATA_WIDTH-1:0] i_hrdata_1;                     //Slave 1 read data bus
+input logic i_hready_1;                                      //Slave 1 'hreadyout' signal
 
-input logic i_hresp_2;                                     ///Slave 1 transfer response
-input logic [DATA_WIDTH-1:0] i_hrdata_2;                   //Slave 1 read data bus
-input logic i_hready_2;                                    //Slave 1 'hreadyout' signal
+input logic i_hresp_2;                                       ///Slave 1 transfer response
+input logic [DATA_WIDTH-1:0] i_hrdata_2;                     //Slave 1 read data bus
+input logic i_hready_2;                                      //Slave 1 'hreadyout' signal
 
 //Outpus
-output logic [SLAVE_COUNT-1:0] o_sel;                      //Slave select bus 
-output logic [DATA_WIDTH-1:0] o_hrdata;                    //read data bus (after multiplexer)
-output logic o_hresp;                                      //slave transfer response (after multiplexer)
-output logic o_hready;                                     //slave hreadyout signal (after multiplexer)
+output logic [SLAVE_COUNT-1:0] o_sel;                        //Slave select bus 
+output logic [DATA_WIDTH-1:0] o_hrdata;                      //read data bus (after multiplexer)
+output logic o_hresp;                                        //slave transfer response (after multiplexer)
+output logic o_hready;                                       //slave hreadyout signal (after multiplexer)
 
 //Internal signals
-logic [MUX_SELECT-1:0] mux_select;                         //'mux_select' signal selects a slave to provide the master with read data packet (hrdata,hresp and hready)
+logic [MUX_SELECT-1:0] mux_select;                           //'mux_select' signal selects a slave to provide the master with read data packet (hrdata,hresp and hready)
 
 //HDL code
 
@@ -63,7 +63,7 @@ always @(posedge i_hclk or negedge i_hreset)
     case (i_haddr[ADDR_WIDTH-1:ADDR_WIDTH-SLAVE_SELECT_BITS])
       ADDR_SLAVE_0 :  mux_select<=$bits(mux_select)'(0);
       ADDR_SLAVE_1 :  mux_select<=$bits(mux_select)'(1);
-      ADDR_SLAVE_2 :  mux_select<=$bits(mux_select)'(2);	  
+      ADDR_SLAVE_2 :  mux_select<=$bits(mux_select)'(2);
       default      :  mux_select<=$bits(mux_select)'(0);
     endcase
 
