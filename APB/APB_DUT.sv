@@ -1,4 +1,4 @@
-//APB - ADD PSEL GENERATOR!!!
+//APB DUT
 
 module APB_DUT(i_prstn,i_pclk,
 i_start_0,i_rw_0,i_data_in_0,i_addr_rand_0,i_slave_rand_0,o_data_out_m0,o_transfer_status_m0,o_valid_m0,o_ready_m0,
@@ -213,8 +213,8 @@ APB_Slave #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .REG_NUM(REG_NUM),
                 .i_penable(penable_s),                                                      
                 .i_pwdata(pwdata_s),                                                         
                 .o_prdata(prdata_s2),                                                        
-				.o_pready(pready_s2),                                                        
-				.o_pslverr(pslverr_s2)
+                .o_pready(pready_s2),                                                        
+                .o_pslverr(pslverr_s2)
                 );
 
 //Interconnect fabric instantiation
@@ -239,31 +239,30 @@ apb_interconnect_fabric #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .MAS
                 .i_psel_m2(psel_m2),                                                                            
                 .i_penable_m2(penable_m2),                                                      
                 .i_pwdata_m2(pwdata_m2), 
-				
+
                 .i_prdata_s0(prdata_s0),                                                        		
                 .i_pready_s0(pready_s0),
-				.i_pslverr_s0(pslverr_s0),
-				
+                .i_pslverr_s0(pslverr_s0),
+
                 .i_prdata_s1(prdata_s1),                                                        		
                 .i_pready_s1(pready_s1),
-				.i_pslverr_s1(pslverr_s1),
+                .i_pslverr_s1(pslverr_s1),
 
                 .i_prdata_s2(prdata_s2),                                                        		
                 .i_pready_s2(pready_s2),
-				.i_pslverr_s2(pslverr_s2),
-				
+                .i_pslverr_s2(pslverr_s2),
+
                 .o_paddr(paddr_s),                                                                   
                 .o_pwrite(pwrite_s),                                                        
                 .o_psel(psel_s),                                                                            
                 .o_penable(penable_s),                                                      
                 .o_pwdata(pwdata_s),
-				
-                .o_prdata(prdata_m),                                                        	
-				.o_pready(pready_m),
-				.o_pslverr(pslverr_m),
-				
-				.o_gnt(o_gnt)
-				);
 
-					
+                .o_prdata(prdata_m),                                                        	
+                .o_pready(pready_m),
+                .o_pslverr(pslverr_m),
+
+                .o_gnt(o_gnt)
+);
+
 endmodule
