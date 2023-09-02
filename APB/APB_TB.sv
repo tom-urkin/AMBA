@@ -184,40 +184,40 @@ endtask
 
 //DUT instantiation
 APB_DUT #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .REG_NUM(REG_NUM), .MASTER_COUNT(MASTER_COUNT), .SLAVE_COUNT(SLAVE_COUNT), .ADDR_SLAVE_0(ADDR_SLAVE_0), .ADDR_SLAVE_1(ADDR_SLAVE_1), .ADDR_SLAVE_2(ADDR_SLAVE_2)) D0(.i_prstn(rstn),
-			.i_pclk(clk),
-			
-			.i_start_0(start_0),
-			.i_rw_0(rw_0),
-			.i_data_in_0(data_rand_0),
-			.i_addr_rand_0(addr_rand_0),
-			.i_slave_rand_0(slave_rand_0),
-			.o_data_out_m0(o_data_out_m0),
-			.o_transfer_status_m0(transfer_status_m0),
-			.o_valid_m0(valid_m0),
-			.o_ready_m0(ready_m0),
-			
-			.i_start_1(start_1),
-			.i_rw_1(rw_1),
-			.i_data_in_1(data_rand_1),
-			.i_addr_rand_1(addr_rand_1),
-			.i_slave_rand_1(slave_rand_1),
-			.o_data_out_m1(o_data_out_m1),
-			.o_transfer_status_m1(transfer_status_m1),
-			.o_valid_m1(valid_m1),
-			.o_ready_m1(ready_m1),
+      .i_pclk(clk),
 
-			.i_start_2(start_2),
-			.i_rw_2(rw_2),
-			.i_data_in_2(data_rand_2),
-			.i_addr_rand_2(addr_rand_2),
-			.i_slave_rand_2(slave_rand_2),			
-			.o_data_out_m2(o_data_out_m2),
-			.o_transfer_status_m2(transfer_status_m2),
-			.o_valid_m2(valid_m2),
-			.o_ready_m2(ready_m2),
-			
-			.o_gnt(gnt)
-			);
+      .i_start_0(start_0),
+      .i_rw_0(rw_0),
+      .i_data_in_0(data_rand_0),
+      .i_addr_rand_0(addr_rand_0),
+      .i_slave_rand_0(slave_rand_0),
+      .o_data_out_m0(o_data_out_m0),
+      .o_transfer_status_m0(transfer_status_m0),
+      .o_valid_m0(valid_m0),
+      .o_ready_m0(ready_m0),
+
+      .i_start_1(start_1),
+      .i_rw_1(rw_1),
+      .i_data_in_1(data_rand_1),
+      .i_addr_rand_1(addr_rand_1),
+      .i_slave_rand_1(slave_rand_1),
+      .o_data_out_m1(o_data_out_m1),
+      .o_transfer_status_m1(transfer_status_m1),
+      .o_valid_m1(valid_m1),
+      .o_ready_m1(ready_m1),
+
+      .i_start_2(start_2),
+      .i_rw_2(rw_2),
+      .i_data_in_2(data_rand_2),
+      .i_addr_rand_2(addr_rand_2),
+      .i_slave_rand_2(slave_rand_2),
+      .o_data_out_m2(o_data_out_m2),
+      .o_transfer_status_m2(transfer_status_m2),
+      .o_valid_m2(valid_m2),
+      .o_ready_m2(ready_m2),
+
+      .o_gnt(gnt)
+);
 
 
 //Initial blocks
@@ -264,38 +264,38 @@ assign transfer_status=transfer_status_m0|transfer_status_m1|transfer_status_m2;
 always @(posedge clk) begin
   if (transfer_status==1'b1) begin
     $display("\ Communication error - TEST FAILED");                                  //Exit TB upon first failed transfer 
-	$finish;
+    $finish;
   end  
   
   if (gnt[0]&rw_0) begin
     if (slave_rand_0==ADDR_SLAVE_0)
       mimic_mem_0[addr_rand_0]=data_rand_0;
-	else if (slave_rand_0==ADDR_SLAVE_1)
+  else if (slave_rand_0==ADDR_SLAVE_1)
       mimic_mem_1[addr_rand_0]=data_rand_0;
-	else
-	  mimic_mem_2[addr_rand_0]=data_rand_0;
+  else
+    mimic_mem_2[addr_rand_0]=data_rand_0;
   end  
   else if (gnt[0])
     task_compare(gnt);
-	
+
   else if (gnt[1]&rw_1) begin	
     if (slave_rand_1==ADDR_SLAVE_0)
       mimic_mem_0[addr_rand_1]=data_rand_1;
-	else if (slave_rand_1==ADDR_SLAVE_1)
+  else if (slave_rand_1==ADDR_SLAVE_1)
       mimic_mem_1[addr_rand_1]=data_rand_1;
-	else
-	  mimic_mem_2[addr_rand_1]=data_rand_1;  
+  else
+    mimic_mem_2[addr_rand_1]=data_rand_1;  
   end
   else if (gnt[1])
      task_compare(gnt);
-	 
+
   else if (gnt[2]&rw_2) begin
     if (slave_rand_2==ADDR_SLAVE_0)
       mimic_mem_0[addr_rand_2]=data_rand_2;
-	else if (slave_rand_2==ADDR_SLAVE_1)
+  else if (slave_rand_2==ADDR_SLAVE_1)
       mimic_mem_1[addr_rand_2]=data_rand_2;
-	else
-	  mimic_mem_2[addr_rand_2]=data_rand_2;
+  else
+    mimic_mem_2[addr_rand_2]=data_rand_2;
   end
   else if (gnt[2])
     task_compare(gnt);  
